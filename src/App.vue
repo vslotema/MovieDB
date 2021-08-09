@@ -8,7 +8,7 @@
           </div>
 
           <v-autocomplete
-          class="searchbar"
+            class="searchbar"
             :items="items"
             :search-input.sync="search"
             :loading="loading"
@@ -25,10 +25,10 @@
           ></v-autocomplete>
         </div>
       </div>
-
+      {{ ncols }}
       <v-container class="cards-container">
         <v-row dense>
-          <v-col :cols="numCols" v-for="i in items" :key="i.imdbID">
+          <v-col :cols="ncols" v-for="i in items" :key="i.imdbID">
             <MovieCard
               :title="i.Title"
               :poster="i.Poster"
@@ -39,6 +39,14 @@
           </v-col>
         </v-row>
       </v-container>
+
+      <div class="text-center" v-if="pages > 1">
+        <v-pagination
+          v-model="page"
+          :length="pages"
+          :total-visible="5"
+        ></v-pagination>
+      </div>
     </v-main>
   </v-app>
 </template>
@@ -59,38 +67,49 @@ export default {
     selected: "",
     search: "",
     loading: false,
+    page: 1,
+    pages: 0,
   }),
 
   watch: {
     search(val) {
-      // console.log("Search ", val);
-      if (val && val.length >= 3) this.fetchData();
+      if (val && val.length >= 3) {
+        this.fetchData(1);
+        localStorage.setItem("search", this.search);
+      }
+    },
+
+    page(val) {
+      if (val) this.fetchData(val);
     },
   },
 
-  computed:{
-    numCols(){
-      const screen = window.screen.width
-      if(screen <= 414) return 12 
-      else return 6
-
-    }
+  computed: {
+    ncols() {
+      const screen = window.screen.width;
+      if (screen <= 768) return 12;
+      else return 6;
+    },
   },
 
   methods: {
-    fetchData() {
+    fetchData(pageNum) {
+      console.log(`PAGE ${pageNum} SEARCH ${this.search} `);
       this.loading = true;
       axios
         .get(`http://www.omdbapi.com/?apikey=${this.key}&`, {
           params: {
-            s: this.search,
-            page: 1,
+            s: this.search || localStorage.getItem("search"),
+            page: pageNum,
             plot: "full",
           },
         })
         .then((response) => {
           console.log("RESPONSE ", response);
           this.items = response.data.Search;
+          this.pages = Math.ceil(Number(response.data.totalResults) / 10);
+          console.log("PAGES ", this.pages);
+
           //console.log("items ", this.items);
         })
         .catch((error) => console.log("error", error))
@@ -117,16 +136,15 @@ h1 {
   padding: 0rem 1rem 0rem 1rem;
 }
 
-
 .v-main {
   background: rgb(36, 36, 36);
 }
 
-.searchbar{
-  max-width:750px; 
+.searchbar {
+  max-width: 750px;
 }
 
-.cards-container{
+.cards-container {
   max-width: 1024px;
 }
 </style>
