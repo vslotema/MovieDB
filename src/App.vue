@@ -25,10 +25,10 @@
           ></v-autocomplete>
         </div>
       </div>
-      {{ ncols }}
+
       <v-container class="cards-container">
         <v-row dense>
-          <v-col :cols="ncols" v-for="i in items" :key="i.imdbID">
+          <v-col :cols="12" sm="6" v-for="i in items" :key="i.imdbID">
             <MovieCard
               :title="i.Title"
               :poster="i.Poster"
@@ -40,8 +40,9 @@
         </v-row>
       </v-container>
 
-      <div class="text-center" v-if="pages > 1">
+      <div class="text-center py-6" v-if="pages > 1">
         <v-pagination
+        color="black"
           v-model="page"
           :length="pages"
           :total-visible="5"
@@ -81,14 +82,6 @@ export default {
 
     page(val) {
       if (val) this.fetchData(val);
-    },
-  },
-
-  computed: {
-    ncols() {
-      const screen = window.screen.width;
-      if (screen <= 768) return 12;
-      else return 6;
     },
   },
 

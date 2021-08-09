@@ -88,7 +88,7 @@ export default {
           },
         })
         .then((response) => {
-         // console.log("RESPONSE ", response);
+          console.log("RESPONSE ", response);
           this.plot = response.data.Plot;
           //console.log("items ", this.items);
         })
