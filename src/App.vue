@@ -27,8 +27,15 @@
       </div>
 
       <v-container class="cards-container">
+    
         <v-row dense>
-          <v-col :cols="12" sm="6" v-for="i in items" :key="i.imdbID">
+          <v-col
+            :cols="12"
+            sm="6"
+            v-for="i in items"
+            :key="i.imdbID"
+            class="fill-height"
+          >
             <MovieCard
               :title="i.Title"
               :poster="i.Poster"
@@ -42,7 +49,8 @@
 
       <div class="text-center py-6" v-if="pages > 1">
         <v-pagination
-        color="black"
+          dark
+          color="black"
           v-model="page"
           :length="pages"
           :total-visible="5"
@@ -64,19 +72,20 @@ export default {
 
   data: () => ({
     items: [],
-    key: "20b15791",
+    url:'http://www.omdbapi.com/?apikey=20b15791&',
     selected: "",
     search: "",
     loading: false,
     page: 1,
     pages: 0,
+
   }),
 
   watch: {
     search(val) {
       if (val && val.length >= 3) {
         this.fetchData(1);
-        localStorage.setItem("search", this.search);
+        sessionStorage.setItem("search", this.search);
       }
     },
 
@@ -87,23 +96,19 @@ export default {
 
   methods: {
     fetchData(pageNum) {
-      console.log(`PAGE ${pageNum} SEARCH ${this.search} `);
+   
       this.loading = true;
       axios
-        .get(`http://www.omdbapi.com/?apikey=${this.key}&`, {
+        .get(this.url, {
           params: {
-            s: this.search || localStorage.getItem("search"),
+            s: this.search || sessionStorage.getItem("search"),
             page: pageNum,
             plot: "full",
           },
         })
         .then((response) => {
-          console.log("RESPONSE ", response);
           this.items = response.data.Search;
           this.pages = Math.ceil(Number(response.data.totalResults) / 10);
-          console.log("PAGES ", this.pages);
-
-          //console.log("items ", this.items);
         })
         .catch((error) => console.log("error", error))
         .finally(() => (this.loading = false));
@@ -134,7 +139,7 @@ h1 {
 }
 
 .searchbar {
-  max-width: 750px;
+  max-width: 700px;
 }
 
 .cards-container {
