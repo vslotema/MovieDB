@@ -77,7 +77,7 @@ export default {
     return {
       show: false,
       plot: "",
-      url:'http://www.omdbapi.com/?apikey=20b15791&',
+      url: "http://www.omdbapi.com/?apikey=20b15791&",
       loading: false,
     };
   },
@@ -96,7 +96,6 @@ export default {
           },
         })
         .then((response) => {
-      
           this.plot = response.data.Plot;
         })
         .catch((error) => console.log("error", error))
