@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <v-card :color="'black'" dark>
-      <div class="d-flex flex-no-wrap justify-start">
+  
+    <v-card  color="black" dark class="card-container">
+      <div class="d-flex">
         <v-avatar
           v-if="poster !== 'N/A'"
           class="ml-3 my-3"
@@ -11,7 +11,7 @@
         >
           <v-img :src="poster"></v-img>
         </v-avatar>
-        <div class="d-flex flex-column justify-space-between">
+        <div class="d-flex flex-column justify-space-between info-box ">
           <div>
             <v-card-title v-text="title"></v-card-title>
 
@@ -45,7 +45,7 @@
         </div>
       </v-expand-transition>
     </v-card>
-  </div>
+
 </template>
 
 <script>
@@ -106,6 +106,13 @@ export default {
 </script>
 
 <style scoped>
+
+
+
+.info-box{
+  min-height: 204px !important;
+}
+
 .v-card__actions {
   width: 80px;
 }

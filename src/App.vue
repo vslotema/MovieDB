@@ -30,11 +30,12 @@
     
         <v-row dense>
           <v-col
+            align-self="stretch"
             :cols="12"
             sm="6"
             v-for="i in items"
             :key="i.imdbID"
-            class="fill-height"
+            class="d-flex flex-column align-stretch"
           >
             <MovieCard
               :title="i.Title"
